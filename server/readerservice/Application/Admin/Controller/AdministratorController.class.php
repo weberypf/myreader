@@ -2,7 +2,7 @@
 namespace Admin\Controller;
 
 use Think\Controller;
-class AdministratorController extends Controller
+class AdministratorController extends BaseController
 {
     public function index(){
         $Data = M('admin'); // 实例化Data数据模型
