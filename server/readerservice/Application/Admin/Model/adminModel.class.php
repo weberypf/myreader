@@ -2,7 +2,7 @@
 namespace Admin\Model;
 
 use Think\Model;
-class adminModel extends Model
+class AdminModel extends Model
 {
     /**
      * 自动验证
