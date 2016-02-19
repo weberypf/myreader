@@ -1,0 +1,128 @@
+<layout name="layout" />
+<div class="wrapper">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                书籍管理
+                <small></small>
+            </h1>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <!-- Main row -->
+            <div class="row">
+                <section class="col-lg-12">
+                    <div class="box box-primary">
+                        <!-- /.box-header -->
+                        <!-- form start -->
+                        <form id="form" class="form-horizontal" method="post" action="__MODULE__/Book/update">
+                            <input type="hidden" id="id" value="{$book.id}">
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label for="bookname" class="col-sm-2 control-label">书名</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="bookname" value="{$book.bookname}" placeholder="书名">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cover" class="col-sm-2 control-label">封面</label>
+                                    <div class="col-sm-10">
+                                        <img id="cover" class="img-responsive" src="{$book.cover}" alt="book picture">
+                                        <a id="boswer" href="javascript:void(0);" class="btn btn-primary" style="margin-top: 10px;"><b>上传</b></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.box-body -->
+                            <div class="box-footer">
+                                <button type="submit" id="confirm" class="btn btn-primary pull-right flat">修改</button>
+                            </div>
+                            <p id="errtip" class="alert alert-warning flat" style="display: none;margin-top: 10px;"></p>
+                            <!-- /.box-footer -->
+                        </form>
+                    </div>
+                </section>
+            </div>
+            <!-- /.row (main row) -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+</div>
+<script type="text/javascript" src="__PUBLIC__/plugins/upload/plupload.full.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/plugins/upload/zh_CN.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $("#confirm").click(function(){
+            var $this = $(this);
+            $("#errtip").fadeOut();
+            if(!$this.hasClass("disabled")){
+                $this.addClass("disabled").html('正在修改...');
+            }
+            $.post($("#form").attr("action"),{id:$("#id").val(),bookname:$("#bookname").val(),cover:$("#cover").attr("src")},function(data){
+                $this.removeClass("disabled").html('修改');
+                if(data && data.IsSuccess){
+                    layer.msg('书籍修改成功!', function(){
+                        window.location.href = '__MODULE__/Book/index';
+                    });
+                }else{
+                    $("#errtip").html(data.Message).fadeIn();
+                }
+            });
+            return false;
+        });
+
+
+        //上传
+        (function () {
+
+            var uploadOptions = {
+                browse_button: 'boswer',
+                multi_selection: false,
+                multipart_params: {
+
+                },
+                url: '__MODULE__/Book/uploadCover',
+                filters: {
+                    max_file_size: '1mb',
+                    mime_types: [
+                        { title: "图片文件", extensions: "jpg,jpeg,png" }
+                    ],
+                    prevent_duplicates: true
+                }
+            };
+
+            var uploader = new plupload.Uploader(uploadOptions);
+            uploader.init();
+
+            //添加文件
+            uploader.bind('FilesAdded', function (up, files) {
+                uploader.start();
+                $("#boswer").addClass("disabled");
+                uploader.disableBrowse(true);
+            });
+            //文件上传完成
+            uploader.bind('FileUploaded', function(up, file, responseObject){
+                uploader.disableBrowse(false);
+                $("#boswer").removeClass("disabled");
+                uploader.splice(0, 1);
+                var data = jQuery.parseJSON(responseObject.response);
+                if (data && data.IsSuccess) {
+                    $("#cover").attr("src",data.Data);
+                }
+                else {
+                    layer.msg(data.Message);
+                }
+            });
+            //err
+            uploader.bind('Error', function (up,err) {
+                uploader.disableBrowse(false);
+                $("#boswer").removeClass("disabled");
+                layer.msg(err.message);
+            });
+
+        })();
+    });
+</script>

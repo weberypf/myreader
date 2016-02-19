@@ -73,12 +73,12 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
             <li class='<eq name="Think.CONTROLLER_NAME" value="Book">active</eq>'>
-                <a href="__MODULE__/Index">
+                <a href="__MODULE__/Book">
                     <i class="fa fa-book"></i> <span>书籍管理</span>
                 </a>
             </li>
             <li class='treeview <?php if($Think.CONTROLLER_NAME=="User" || $Think.CONTROLLER_NAME=="Administrator") echo "active"; ?>'>
-                <a href="#">
+                <a href="__MODULE__/Book/create">
                     <i class="fa fa-cog"></i> <span>系统管理</span> <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">

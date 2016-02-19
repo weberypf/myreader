@@ -5,14 +5,6 @@ use Admin\Model\ReturnValue;
 use Think\Controller;
 class AdministratorController extends BaseController
 {
-    public function index(){
-        $Data = M('admin'); // 实例化Data数据模型
-
-        $map['isdel'] = 0;
-        $this->adminlist = $Data->where($map)->select();
-        $this->display();
-    }
-
     public function changepassword(){
         if(IS_POST){
             $password = I('post.password','');
