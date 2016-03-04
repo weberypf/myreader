@@ -53,6 +53,15 @@ class BookController extends BaseController
         }
     }
 
+    public function delete($id)
+    {
+        if(IS_POST){
+            $Dao = M();
+            $Dao->execute("update book set isdel = 1 where id=".$id.";update user_book set isdel = 1 where bookid = ".$id);
+        }
+        $this->ajaxReturn(ReturnValue::success("ok"));
+    }
+
     //上传封面
     public function uploadCover(){
         $upload = new \Think\Upload();

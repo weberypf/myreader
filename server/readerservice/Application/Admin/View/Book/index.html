@@ -36,9 +36,9 @@
                                         <td>{$book.bookname}</td>
                                         <td>{$book.createtime}</td>
                                         <td>
-                                            <a class="btn btn-primary btn-xs">编辑</a>
+                                            <a href="__MODULE__/Book/edit/id/{$book.id}" class="btn btn-primary btn-xs">编辑</a>
                                             <a class="btn btn-info btn-xs">章节</a>
-                                            <a class="btn btn-danger btn-xs">删除</a>
+                                            <a href="__MODULE__/Book/delete/id/{$book.id}" class="btn btn-danger btn-xs delbook">删除</a>
                                         </td>
                                     </tr>
                                 </volist>
@@ -57,3 +57,22 @@
     <!-- /.content-wrapper -->
 </div>
 <!-- ./wrapper -->
+<script type="text/javascript">
+    $(function(){
+        $(".delbook").click(function(){
+            var $this = $(this);
+            var url = $this.attr("href");
+            layer.confirm('确定要删除？',{},function(index){
+                $.post(url,{},function(data){
+                    layer.close(index);
+                    if(data && data.IsSuccess){
+                        $this.closest("tr").fadeOut('slow');
+                    }else{
+                        layer.msg('删除失败', { time: 3000 });
+                    }
+                })
+            })
+            return false;
+        });
+    })
+</script>
